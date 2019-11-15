@@ -1,0 +1,17 @@
+700429aa2d6b3d2b28620c28dbe9c75b *DESCRIPTION
+5157e1b94d5f54d78961284af584abbb *NAMESPACE
+87c20d11cc075d6424876d19286dac47 *R/tidydice.R
+0cd676f982fad8efca57eb44b5127623 *README.md
+2492d5a948d1f3148681e7fcdca3ca42 *build/vignette.rds
+bf77cc20e4bc93e7eca5987c95d1d55c *inst/doc/tidydice.R
+49486c39949eed0d810b4d30cabeca73 *inst/doc/tidydice.Rmd
+e227ca1af23a9c88f1a2f535b7c07680 *inst/doc/tidydice.html
+ba94de7c7876f29c11e970659eeb59f6 *man/flip_coin.Rd
+e05dc77df9bcbff19b4083c23652f60c *man/roll_dice.Rd
+1c1598acb748df701fe2e7dfcc59f1c4 *tests/testthat.R
+c7e6853a87258b90636115c629685397 *tests/testthat/test_col.R
+dcbcc3ef171faea5142333f7d4fc9dea *tests/testthat/test_nrow.R
+9c4fe9699c48997638dff5a8a2b51c62 *tests/testthat/test_parameter.R
+e46530b8045198277de0507cd8a9cf9a *tests/testthat/test_success.R
+75a0593be0fdd343af46bc736a6e7074 *tests/testthat/test_unusual.R
+49486c39949eed0d810b4d30cabeca73 *vignettes/tidydice.Rmd

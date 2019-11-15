@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Roland Krasser" />
+
+<meta name="date" content="2019-11-11" />
+
+<title>tidydice</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">tidydice</h1>
+<h4 class="author">Roland Krasser</h4>
+<h4 class="date">2019-11-11</h4>
+
+
+
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>A basic understanding of probability and statistics is crucial for data understanding and discovery of meaningful patterns. A great way to teach probability and statistics is to start with an experiment, like rolling a dice or flipping a coin.</p>
+<p>This package simulates rolling a dice and flipping a coin. Each experiment generates a tibble. Dice rolls and coin flips are simulated using sample(). The properties of the dice can be changed, like the number of sides. A Coin flip is simulated using a two sided dice. Experiments can be combined with the pipe-operator.</p>
+<p>tidydice package on Github: <a href="https://github.com/rolkra/tidydice" class="uri">https://github.com/rolkra/tidydice</a></p>
+</div>
+<div id="setup" class="section level3">
+<h3>Setup</h3>
+<p>As the tidydice-functions fits well into the tidyverse, we load the dplyr-package. For quick visualisations we use the explore-package. To create more flexible graphics, use ggplot2.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidydice)
+<span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(explore)</code></pre></div>
+</div>
+<div id="roll-a-dice" class="section level3">
+<h3>Roll a dice</h3>
+<div id="roll-a-dice-once" class="section level4">
+<h4>Roll a dice once</h4>
+<p>The output of roll_dice() is a tibble. Each row represents a dice roll. Without parameters, a dice is rolled once.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>()
+<span class="co">#&gt; # A tibble: 1 x 5</span>
+<span class="co">#&gt;   experiment round    nr result success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;lgl&gt;  </span>
+<span class="co">#&gt; 1          1     1     1      2 FALSE</span></code></pre></div>
+<p>Success is defined as result = 6 (as default), while result = 1..5 is not a success. In this case the result is 2, so it is no success.</p>
+</div>
+<div id="define-success" class="section level4">
+<h4>Define success</h4>
+<p>If we would define result = 2 and result = 6 as success, it would be treated as success.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">success =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">6</span>))
+<span class="co">#&gt; # A tibble: 1 x 5</span>
+<span class="co">#&gt;   experiment round    nr result success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;lgl&gt;  </span>
+<span class="co">#&gt; 1          1     1     1      2 TRUE</span></code></pre></div>
+</div>
+<div id="unfair-dice" class="section level4">
+<h4>Unfair dice</h4>
+<p>As default, the dice is fair. So every result (0..6) has the same probability. If you want, you can change this.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">prob =</span> <span class="kw">c</span>(<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">0</span>,<span class="dv">1</span>))
+<span class="co">#&gt; # A tibble: 1 x 5</span>
+<span class="co">#&gt;   experiment round    nr result success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;lgl&gt;  </span>
+<span class="co">#&gt; 1          1     1     1      6 TRUE</span></code></pre></div>
+<p>In this case we created a dice that always gets result = 6 (with 100% probability)</p>
+</div>
+<div id="untypically-dice" class="section level4">
+<h4>Untypically dice</h4>
+<p>As default the dice has 6 sides. If you want you can change this. Here we use a dice with 12 sides. result now can have a value between 1 and 12. But result = 6 is still the default success.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">sides =</span> <span class="dv">12</span>)
+<span class="co">#&gt; # A tibble: 1 x 5</span>
+<span class="co">#&gt;   experiment round    nr result success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;lgl&gt;  </span>
+<span class="co">#&gt; 1          1     1     1      4 FALSE</span></code></pre></div>
+</div>
+<div id="roll-a-dice-4-times" class="section level4">
+<h4>Roll a dice 4 times</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">4</span>)
+<span class="co">#&gt; # A tibble: 4 x 5</span>
+<span class="co">#&gt;   experiment round    nr result success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;lgl&gt;  </span>
+<span class="co">#&gt; 1          1     1     1      2 FALSE  </span>
+<span class="co">#&gt; 2          1     1     2      5 FALSE  </span>
+<span class="co">#&gt; 3          1     1     3      3 FALSE  </span>
+<span class="co">#&gt; 4          1     1     4      6 TRUE</span></code></pre></div>
+<p>We get 1 success</p>
+</div>
+<div id="define-rounds" class="section level4">
+<h4>Define rounds</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">4</span>, <span class="dt">rounds =</span> <span class="dv">2</span>)
+<span class="co">#&gt; # A tibble: 8 x 5</span>
+<span class="co">#&gt;   experiment round    nr result success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;lgl&gt;  </span>
+<span class="co">#&gt; 1          1     1     1      2 FALSE  </span>
+<span class="co">#&gt; 2          1     1     2      5 FALSE  </span>
+<span class="co">#&gt; 3          1     1     3      3 FALSE  </span>
+<span class="co">#&gt; 4          1     1     4      6 TRUE   </span>
+<span class="co">#&gt; 5          1     2     1      6 TRUE   </span>
+<span class="co">#&gt; 6          1     2     2      1 FALSE  </span>
+<span class="co">#&gt; 7          1     2     3      4 FALSE  </span>
+<span class="co">#&gt; 8          1     2     4      6 TRUE</span></code></pre></div>
+<p>Rolling the dice 4 times is repeated. In the first round we got 1 success, in the secound round 2 success.</p>
+</div>
+<div id="use-agg" class="section level4">
+<h4>Use agg</h4>
+<p>A convenient way to aggregate the result, is to use the agg parameter. Now we get one line per round.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">4</span>, <span class="dt">rounds =</span> <span class="dv">2</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt; # A tibble: 2 x 4</span>
+<span class="co">#&gt;   experiment round times success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;</span>
+<span class="co">#&gt; 1          1     1     4       1</span>
+<span class="co">#&gt; 2          1     2     4       2</span></code></pre></div>
+<p>You can aggregate by hand too using dplyr.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">4</span>, <span class="dt">rounds =</span> <span class="dv">2</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">group_by</span>(experiment, round) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">summarise</span>(<span class="dt">times =</span> <span class="kw">n</span>(),
+            <span class="dt">success =</span> <span class="kw">sum</span>(success))
+<span class="co">#&gt; # A tibble: 2 x 4</span>
+<span class="co">#&gt; # Groups:   experiment [1]</span>
+<span class="co">#&gt;   experiment round times success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;</span>
+<span class="co">#&gt; 1          1     1     4       1</span>
+<span class="co">#&gt; 2          1     2     4       2</span></code></pre></div>
+</div>
+<div id="visualise-result" class="section level4">
+<h4>Visualise result</h4>
+<p>You can use any package/tool you like to visualise the result. In this example we use the explore-package.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">explore</span>(result, <span class="dt">title =</span> <span class="st">&quot;Rolling a dice 100x&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>In 15% of the cases we got a six. This is close to the expected value of 100/6 = 16.67%</p>
+<p>If we increase the times parameter to 10000, the results are more balanced.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">10000</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">explore</span>(result, <span class="dt">title =</span> <span class="st">&quot;Rolling a dice 10000x&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="visualise-success" class="section level4">
+<h4>Visualise success</h4>
+<p>If we repeat the experiment rolling a dice 100x with rounds = 100, we get the distribution with a peak at about 17 (16.67 is the expected value)</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">rounds =</span> <span class="dv">100</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">explore</span>(success, 
+          <span class="dt">title =</span> <span class="st">&quot;Rolling a dice 100x&quot;</span>,
+          <span class="dt">auto_scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>If we increase rounds from 100 to 10000 we get a more symmetric shape. We see that success below 5 and success above 30 are very unlikely.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">rounds =</span> <span class="dv">10000</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">explore</span>(success, 
+          <span class="dt">title =</span> <span class="st">&quot;Rolling a dice 100x&quot;</span>,
+          <span class="dt">auto_scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">rounds =</span> <span class="dv">10000</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">check =</span> <span class="kw">ifelse</span>(success <span class="op">&lt;</span><span class="st"> </span><span class="dv">5</span> <span class="op">|</span><span class="st"> </span>success <span class="op">&gt;</span><span class="st"> </span><span class="dv">30</span>, <span class="dv">1</span>, <span class="dv">0</span>)) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">count</span>(check)
+<span class="co">#&gt; # A tibble: 2 x 2</span>
+<span class="co">#&gt;   check     n</span>
+<span class="co">#&gt;   &lt;dbl&gt; &lt;int&gt;</span>
+<span class="co">#&gt; 1     0  9996</span>
+<span class="co">#&gt; 2     1     4</span></code></pre></div>
+<p>In only 4 of 10000 cases success is below 5 or above 30. So the probability to get this result is very low.</p>
+</div>
+<div id="combine-experiments" class="section level4">
+<h4>Combine experiments</h4>
+<p>Let’s add an experiment, where you have 10 extra dice. The shape of the distribution changes.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">rounds =</span> <span class="dv">10000</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">110</span>, <span class="dt">rounds =</span> <span class="dv">10000</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">explore</span>(success, 
+          <span class="dt">target =</span> experiment,
+          <span class="dt">title =</span> <span class="st">&quot;Rolling a dice 100/110x&quot;</span>,
+          <span class="dt">auto_scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>You can add as many experiments as you like (as long they generate the same data structure)</p>
+<p>Adding an experiment with times = 150 will generate a smaller but wider shape.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">100</span>, <span class="dt">rounds =</span> <span class="dv">10000</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">110</span>, <span class="dt">rounds =</span> <span class="dv">10000</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">roll_dice</span>(<span class="dt">times =</span> <span class="dv">150</span>, <span class="dt">rounds =</span> <span class="dv">10000</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">explore</span>(success, 
+          <span class="dt">target =</span> experiment,
+          <span class="dt">title =</span> <span class="st">&quot;Rolling a dice 100/110/150x&quot;</span>,
+          <span class="dt">auto_scale =</span> <span class="ot">FALSE</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+<div id="flip-a-coin" class="section level3">
+<h3>Flip a coin</h3>
+<p>Internally the package handles coins as dice with only two sides. Success is defined as result = 2 (as default), while result = 1 is not a success.</p>
+<div id="flip-a-coin-10x" class="section level4">
+<h4>Flip a coin 10x</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">flip_coin</span>(<span class="dt">times =</span> <span class="dv">10</span>)
+<span class="co">#&gt; # A tibble: 10 x 5</span>
+<span class="co">#&gt;    experiment round    nr result success</span>
+<span class="co">#&gt;         &lt;int&gt; &lt;int&gt; &lt;int&gt;  &lt;int&gt; &lt;lgl&gt;  </span>
+<span class="co">#&gt;  1          1     1     1      2 TRUE   </span>
+<span class="co">#&gt;  2          1     1     2      2 TRUE   </span>
+<span class="co">#&gt;  3          1     1     3      2 TRUE   </span>
+<span class="co">#&gt;  4          1     1     4      2 TRUE   </span>
+<span class="co">#&gt;  5          1     1     5      2 TRUE   </span>
+<span class="co">#&gt;  6          1     1     6      1 FALSE  </span>
+<span class="co">#&gt;  7          1     1     7      1 FALSE  </span>
+<span class="co">#&gt;  8          1     1     8      2 TRUE   </span>
+<span class="co">#&gt;  9          1     1     9      2 TRUE   </span>
+<span class="co">#&gt; 10          1     1    10      2 TRUE</span></code></pre></div>
+<p>In this case the result are 6x 2 and 4x 1. We can use the describe() function of the explore-package to get a good overview.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">flip_coin</span>(<span class="dt">times =</span> <span class="dv">10</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">describe</span>(success)
+<span class="co">#&gt; variable = success</span>
+<span class="co">#&gt; type     = logical</span>
+<span class="co">#&gt; na       = 0 of 10 (0%)</span>
+<span class="co">#&gt; unique   = 2</span>
+<span class="co">#&gt;    FALSE = 5 (50%)</span>
+<span class="co">#&gt;     TRUE = 5 (50%)</span></code></pre></div>
+<p>Or just use the agg-parameter</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">flip_coin</span>(<span class="dt">times =</span> <span class="dv">10</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt; # A tibble: 1 x 4</span>
+<span class="co">#&gt;   experiment round times success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;</span>
+<span class="co">#&gt; 1          1     1    10       4</span></code></pre></div>
+</div>
+<div id="define-rounds-1" class="section level4">
+<h4>Define rounds</h4>
+<p>The parameter rounds can be used like in roll_dice().</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">flip_coin</span>(<span class="dt">times =</span> <span class="dv">10</span>, <span class="dt">rounds =</span> <span class="dv">4</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt; # A tibble: 4 x 4</span>
+<span class="co">#&gt;   experiment round times success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;</span>
+<span class="co">#&gt; 1          1     1    10       4</span>
+<span class="co">#&gt; 2          1     2    10       7</span>
+<span class="co">#&gt; 3          1     3    10       4</span>
+<span class="co">#&gt; 4          1     4    10       5</span></code></pre></div>
+</div>
+<div id="combine-experiments-1" class="section level4">
+<h4>Combine experiments</h4>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">123</span>)
+<span class="kw">flip_coin</span>(<span class="dt">times =</span> <span class="dv">10</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">flip_coin</span>(<span class="dt">times =</span> <span class="dv">15</span>, <span class="dt">agg =</span> <span class="ot">TRUE</span>)
+<span class="co">#&gt; # A tibble: 2 x 4</span>
+<span class="co">#&gt;   experiment round times success</span>
+<span class="co">#&gt;        &lt;int&gt; &lt;int&gt; &lt;int&gt;   &lt;int&gt;</span>
+<span class="co">#&gt; 1          1     1    10       7</span>
+<span class="co">#&gt; 2          2     1    15       6</span></code></pre></div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
