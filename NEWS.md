@@ -1,3 +1,12 @@
+## tidydice 0.0.6 (2020-01-07)
+
+* improve vignette
+* add function binom()
+* add function binom_dice()
+* add function binom_coin()
+* add function plot_binom()
+* plot_dice() detailed = FALSE as default
+
 ## tidydice 0.0.4 (2019-11-26)
 
 * add function plot_dice()

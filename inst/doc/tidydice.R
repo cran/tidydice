@@ -61,29 +61,33 @@ roll_dice(times = 4, rounds = 2) %>%
   summarise(times = n(),
             success = sum(success))
 
-## ----echo=TRUE-----------------------------------------------------------
+## ----echo=TRUE, fig.height=4, fig.width=7--------------------------------
 set.seed(123)
 roll_dice(times = 100) %>% 
   explore(result, title = "Rolling a dice 100x")
 
-## ----echo=TRUE-----------------------------------------------------------
+## ----echo=TRUE, fig.height=4, fig.width=7--------------------------------
 set.seed(123)
 roll_dice(times = 10000) %>% 
   explore(result, title = "Rolling a dice 10000x")
 
-## ----echo=TRUE-----------------------------------------------------------
+## ----echo=TRUE, fig.height=4, fig.width=7--------------------------------
 set.seed(123)
 roll_dice(times = 100, rounds = 100, agg = TRUE) %>% 
   explore(success, 
-          title = "Rolling a dice 100x",
+          title = "Rolling 100 dice 100x",
           auto_scale = FALSE)
 
-## ----echo=TRUE-----------------------------------------------------------
+## ----echo=TRUE, fig.height=4, fig.width=7--------------------------------
 set.seed(123)
 roll_dice(times = 100, rounds = 10000, agg = TRUE) %>% 
   explore(success, 
-          title = "Rolling a dice 10000x",
+          title = "Rolling 100 dice 10000x",
           auto_scale = FALSE)
+
+## ----echo=TRUE, fig.height=4, fig.width=7--------------------------------
+binom_dice(times = 100) %>% 
+  plot_binom(title = "Binomial distribution, rolling 100 dice")
 
 ## ----echo=TRUE-----------------------------------------------------------
 set.seed(123)
@@ -92,6 +96,15 @@ roll_dice(times = 100, rounds = 10000, agg = TRUE) %>%
   count(check)
 
 ## ----echo=TRUE-----------------------------------------------------------
+binom_dice(times = 100) %>% 
+  filter(success < 5 | success > 30)
+
+## ----echo=TRUE-----------------------------------------------------------
+binom_dice(times = 100) %>% 
+  filter(success < 5 | success > 30) %>% 
+  summarise(check_pct = sum(pct))
+
+## ----echo=TRUE, fig.height=4, fig.width=7--------------------------------
 set.seed(123)
 roll_dice(times = 100, rounds = 10000, agg = TRUE) %>% 
   roll_dice(times = 110, rounds = 10000, agg = TRUE) %>% 
@@ -100,7 +113,7 @@ roll_dice(times = 100, rounds = 10000, agg = TRUE) %>%
           title = "Rolling a dice 100/110x",
           auto_scale = FALSE)
 
-## ----echo=TRUE-----------------------------------------------------------
+## ----echo=TRUE, fig.height=4, fig.width=7--------------------------------
 set.seed(123)
 roll_dice(times = 100, rounds = 10000, agg = TRUE) %>% 
   roll_dice(times = 110, rounds = 10000, agg = TRUE) %>% 
@@ -109,6 +122,10 @@ roll_dice(times = 100, rounds = 10000, agg = TRUE) %>%
           target = experiment,
           title = "Rolling a dice 100/110/150x",
           auto_scale = FALSE)
+
+## ----echo=TRUE, fig.height=4, fig.width=7--------------------------------
+binom_dice(times = 100) %>% 
+  plot_binom(highlight = c(10:23))
 
 ## ----echo=TRUE-----------------------------------------------------------
 set.seed(123)
@@ -132,6 +149,13 @@ set.seed(123)
 flip_coin(times = 10, agg = TRUE) %>% 
   flip_coin(times = 15, agg = TRUE)
 
+## ----echo=TRUE-----------------------------------------------------------
+binom_coin(times = 10) 
+
+## ----echo=TRUE-----------------------------------------------------------
+binom_coin(times = 10) %>% 
+  plot_binom(title = "Binomial distribution,\n10 coin flips")
+
 ## ----fig.height=1, fig.width=6-------------------------------------------
 set.seed(123)
 roll_dice(times = 6) %>% 
@@ -145,7 +169,7 @@ roll_dice(times = 6) %>%
 ## ----fig.height=1, fig.width=6-------------------------------------------
 set.seed(123)
 roll_dice(times = 6) %>% 
-  plot_dice(fill = "lightblue", fill_success = "darkblue")
+  plot_dice(fill = "lightblue", fill_success = "gold")
 
 ## ----fig.height=1, fig.width=6-------------------------------------------
 set.seed(123)

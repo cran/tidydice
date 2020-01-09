@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 
 A basic understanding of probability and statistics is crucial for data understanding and discovery of meaningful patterns. A great way to teach probability and statistics is to start with an experiment, like rolling a dice or flipping a coin.
 
-This package simulates rolling a dice and flipping a coin. Each experiment generates a tibble. Dice rolls and coin flips are simulated using sample(). The properties of the dice can be changed, like the number of sides. A Coin flip is simulated using a two sided dice. Experiments can be combined with the pipe-operator. 
+This package simulates rolling a dice and flipping a coin. Each experiment generates a tibble. Dice rolls and coin flips are simulated using sample(). The properties of the dice can be changed, like the number of sides. A coin flip is simulated using a two sided dice. Experiments can be combined with the pipe-operator. 
 
 tidydice package on Github: [https://github.com/rolkra/tidydice](https://github.com/rolkra/tidydice)
 
@@ -143,7 +143,7 @@ roll_dice(times = 4, rounds = 2) %>%
 
 You can use any package/tool you like to visualise the result. In this example we use the explore-package.
 
-```{R echo=TRUE}
+```{R echo=TRUE, fig.height=4, fig.width=7}
 set.seed(123)
 roll_dice(times = 100) %>% 
   explore(result, title = "Rolling a dice 100x")
@@ -153,7 +153,7 @@ In 15% of the cases we got a six. This is close to the expected value of 100/6 =
 
 If we increase the times parameter to 10000, the results are more balanced.
 
-```{R echo=TRUE}
+```{R echo=TRUE, fig.height=4, fig.width=7}
 set.seed(123)
 roll_dice(times = 10000) %>% 
   explore(result, title = "Rolling a dice 10000x")
@@ -163,22 +163,29 @@ roll_dice(times = 10000) %>%
 
 If we repeat the experiment rolling a dice 100x with rounds = 100, we get the distribution with a peak at about 17 (16.67 is the expected value)
 
-```{R echo=TRUE}
+```{R echo=TRUE, fig.height=4, fig.width=7}
 set.seed(123)
 roll_dice(times = 100, rounds = 100, agg = TRUE) %>% 
   explore(success, 
-          title = "Rolling a dice 100x",
+          title = "Rolling 100 dice 100x",
           auto_scale = FALSE)
 ```
 
 If we increase rounds from 100 to 10000 we get a more symmetric shape. We see that success below 5 and success above 30 are very unlikely.
 
-```{R echo=TRUE}
+```{R echo=TRUE, fig.height=4, fig.width=7}
 set.seed(123)
 roll_dice(times = 100, rounds = 10000, agg = TRUE) %>% 
   explore(success, 
-          title = "Rolling a dice 10000x",
+          title = "Rolling 100 dice 10000x",
           auto_scale = FALSE)
+```
+
+This shape is already very close to the binomial distribution
+
+```{R echo=TRUE, fig.height=4, fig.width=7}
+binom_dice(times = 100) %>% 
+  plot_binom(title = "Binomial distribution, rolling 100 dice")
 ```
 
 ```{R echo=TRUE}
@@ -188,13 +195,28 @@ roll_dice(times = 100, rounds = 10000, agg = TRUE) %>%
   count(check)
 ```
 
-In only 4 of 10000 cases success is below 5 or above 30. So the probability to get this result is very low.
+In only 4 of 10000 (0.04%) cases success is below 5 or above 30. So the probability to get this result is very low.
+
+We can check that with the binomial distribution too:
+
+```{R echo=TRUE}
+binom_dice(times = 100) %>% 
+  filter(success < 5 | success > 30)
+```
+
+```{R echo=TRUE}
+binom_dice(times = 100) %>% 
+  filter(success < 5 | success > 30) %>% 
+  summarise(check_pct = sum(pct))
+```
+
+The probability to get this result is 0.04% (based on the binomial distribution).
 
 #### Combine experiments
 
 Let's add an experiment, where you have 10 extra dice. The shape of the distribution changes.
 
-```{R echo=TRUE}
+```{R echo=TRUE, fig.height=4, fig.width=7}
 set.seed(123)
 roll_dice(times = 100, rounds = 10000, agg = TRUE) %>% 
   roll_dice(times = 110, rounds = 10000, agg = TRUE) %>% 
@@ -208,7 +230,7 @@ You can add as many experiments as you like (as long they generate the same data
 
 Adding an experiment with times = 150 will generate a smaller but wider shape.
 
-```{R echo=TRUE}
+```{R echo=TRUE, fig.height=4, fig.width=7}
 set.seed(123)
 roll_dice(times = 100, rounds = 10000, agg = TRUE) %>% 
   roll_dice(times = 110, rounds = 10000, agg = TRUE) %>% 
@@ -217,6 +239,15 @@ roll_dice(times = 100, rounds = 10000, agg = TRUE) %>%
           target = experiment,
           title = "Rolling a dice 100/110/150x",
           auto_scale = FALSE)
+```
+
+#### Binomial distribution
+
+Rolling a dice 100x, a result between 10 and 23 has a probability of over 94%
+
+```{R echo=TRUE, fig.height=4, fig.width=7}
+binom_dice(times = 100) %>% 
+  plot_binom(highlight = c(10:23))
 ```
 
 ### Flip a coin
@@ -262,6 +293,17 @@ flip_coin(times = 10, agg = TRUE) %>%
   flip_coin(times = 15, agg = TRUE)
 ```
 
+#### Binomial Distribution
+
+```{R echo=TRUE}
+binom_coin(times = 10) 
+```
+
+```{R echo=TRUE}
+binom_coin(times = 10) %>% 
+  plot_binom(title = "Binomial distribution,\n10 coin flips")
+```
+
 ### Dice design
 
 #### Default settings
@@ -280,11 +322,10 @@ roll_dice(times = 6) %>%
   plot_dice(fill = "black", line_color = "white", point_color = "white")
 ```
 
-
 ```{r fig.height=1, fig.width=6}
 set.seed(123)
 roll_dice(times = 6) %>% 
-  plot_dice(fill = "lightblue", fill_success = "darkblue")
+  plot_dice(fill = "lightblue", fill_success = "gold")
 ```
 
 ```{r fig.height=1, fig.width=6}
