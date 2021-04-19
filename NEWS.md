@@ -1,3 +1,7 @@
+## tidydice 0.1.1 (2021-04-19)
+* add Suggests rmarkdown
+* fix https:// in DESCRIPTION
+
 ## tidydice 0.0.6 (2020-01-07)
 
 * improve vignette

@@ -1,7 +1,7 @@
 Package: tidydice
 Type: Package
 Title: Simulates Dice Rolls and Coin Flips
-Version: 0.0.6
+Version: 0.1.1
 Author: Roland Krasser
 Maintainer: Roland Krasser <roland.krasser@gmail.com>
 Description: Utils for basic statistical experiments, that can be used for teaching 
@@ -12,13 +12,12 @@ Description: Utils for basic statistical experiments, that can be used for teach
     Experiments can be combined with the pipe-operator.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
-URL: http://github.com/rolkra/tidydice
+URL: https://github.com/rolkra/tidydice/
 Imports: assertthat, dplyr, ggplot2, magrittr, purrr, stats, tibble
-RoxygenNote: 6.1.1
-Suggests: explore, knitr, testthat
+RoxygenNote: 7.1.1
+Suggests: explore, knitr, rmarkdown, testthat
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2020-01-07 09:37:03 UTC; ujqb7lf
+Packaged: 2021-04-19 16:21:47 UTC; rolkra
 Repository: CRAN
-Date/Publication: 2020-01-09 19:10:06 UTC
+Date/Publication: 2021-04-19 17:30:03 UTC
