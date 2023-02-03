@@ -1,6 +1,3 @@
-##############################################################################
-## circle_points
-##############################################################################
 #' Helper function to draw a circle
 #'
 #' @param center Vector with x and y coordinate of center
@@ -18,9 +15,6 @@ circle_points <- function(center = c(0, 0), diameter = 1, npoints = 61)  {
   
 } # circle_points
 
-##############################################################################
-## plot_single_dice
-##############################################################################
 #' Draw a single dice
 #'
 #' @param ggplot ggplot-Object. If passed, the dice will be added to plot
@@ -40,7 +34,7 @@ circle_points <- function(center = c(0, 0), diameter = 1, npoints = 61)  {
 #' @import dplyr
 #' @import ggplot2
 
-plot_single_dice <- function(ggplot = NULL, result = 6, x = 0, y = 0, width = 0.9, fill = "white", detailed = FALSE, rounding = dice_width/5, line_size = 0.8, line_color = "black", point_size = width/6, point_color = "black")  {
+plot_single_dice <- function(ggplot = NULL, result = 6, x = 0, y = 0, width = 0.9, fill = "white", detailed = FALSE, rounding = width/5, line_size = 0.8, line_color = "black", point_size = width/6, point_color = "black")  {
   
   dice_width = width / 2
   dice_rounding = rounding
@@ -59,8 +53,8 @@ plot_single_dice <- function(ggplot = NULL, result = 6, x = 0, y = 0, width = 0.
   circle_rb <- circle_points(diameter = dice_rounding * 2,
                              center = c(x + dice_width - dice_rounding, y - dice_width + dice_rounding))
   
-  # line top
-  line_t <- data.frame(x = c(x - dice_width + dice_rounding, x + dice_width - dice_rounding), 
+  # line top (from right to left, to prevent small step in line)
+  line_t <- data.frame(x = c(x + dice_width - dice_rounding, x - dice_width + dice_rounding), 
                        y = c(y + dice_width, y + dice_width))
   # line bottom
   line_b <- data.frame(x = c(x - dice_width + dice_rounding, x + dice_width - dice_rounding), 
@@ -78,18 +72,11 @@ plot_single_dice <- function(ggplot = NULL, result = 6, x = 0, y = 0, width = 0.
                            circle_rb[46:60,], line_r, 
                            circle_rt[1:14,], line_t) 
   
+  #dice_cube_round <- tail(dice_cube_round, -1)
+  
   # dice outside (simple rectangle)
   dice_cube_simple <- data.frame(x = c(x-dice_width, x+dice_width, x+dice_width, x-dice_width, x-dice_width),
                                  y = c(y+dice_width, y+dice_width, y-dice_width, y-dice_width, y+dice_width))
-
-  if (detailed)  {
-    dice_cube <- dice_cube_round
-    line_end <- "round"
-  } else  { 
-    dice_cube <- dice_cube_simple
-    line_end <- "square"
-  } # if
-  
   # points
   points_x <-rep(c(x - dice_width/2, x + 0, x + dice_width/2), 3)
   points_y <-c(rep(y + dice_width/2,3), rep(y + 0, 3), rep(y - dice_width/2,3))
@@ -117,31 +104,46 @@ plot_single_dice <- function(ggplot = NULL, result = 6, x = 0, y = 0, width = 0.
   # plot new dice    
   if (!missing(ggplot))  {
     # plot dice  
-    p <- ggplot +
-      geom_polygon(data = dice_cube, aes(x, y), 
-                   color = line_color, size = line_size*0.9, fill = fill) +
-      geom_path(data = dice_cube, aes(x, y), 
-                 color = line_color, size = line_size, lineend = line_end)
+    
+    if (detailed) {
+      p <- ggplot +
+             geom_polygon(data = dice_cube_round, aes(x, y), 
+                          color = line_color, size = line_size*0.9, fill = fill)
+    } else {
+      p <- ggplot +
+             geom_tile(data = data.frame(x=x, y=y), aes(x,y), 
+                       width = dice_width * 1.9, height = dice_width * 1.9,
+                       color = line_color, size = line_size * 0.9, fill = fill)
+    }
   } else  {
       # add plot dice  
-    p <- ggplot() +
-      geom_polygon(data = dice_cube, aes(x, y), 
-                   color = line_color, size = line_size*0.9, fill = fill) +
-      geom_path(data = dice_cube, aes(x, y), 
-                   color = line_color, size = line_size, lineend = line_end)
-  } #if  
-    
+    if (detailed) {
+      p <- ggplot() +
+        geom_polygon(data = dice_cube_round, aes(x, y), 
+                     color = line_color, size = line_size*0.9, fill = fill)
+    } else {
+      p <- ggplot() +
+        geom_tile(data = data.frame(x=x, y=y), aes(x,y), 
+                  width = dice_width * 1.9, height = dice_width * 1.9,
+                  color = line_color, size = line_size * 0.9, fill = fill)
+    } #if  
+  } #missing ggplot
+  
   # plot dots
   for (i in 1:nrow(points))  {
     x <- points$x[i]
     y <- points$y[i]
     if (detailed)  {
         dice_dot <- circle_points(center = c(x, y), diameter = point_size)
+        p <- p + geom_polygon(data = dice_dot, aes(x, y), color = point_color, fill = point_color)
     } else {
-        dice_dot <- data.frame(x = c(x-point_size/2*0.9, x+point_size/2*0.9, x+point_size/2*0.9, x-point_size/2*0.9, x-point_size/2*0.9),
-                               y = c(y+point_size/2*0.9, y+point_size/2*0.9, y-point_size/2*0.9, y-point_size/2*0.9, y+point_size/2*0.9))
+        #dice_dot <- data.frame(x = c(x-point_size/2*0.9, x+point_size/2*0.9, x+point_size/2*0.9, x-point_size/2*0.9, x-point_size/2*0.9),
+        #                       y = c(y+point_size/2*0.9, y+point_size/2*0.9, y-point_size/2*0.9, y-point_size/2*0.9, y+point_size/2*0.9))
+        dice_dot <- data.frame(x = x, y = y)
+        p <- p + geom_tile(data = dice_dot, aes(x, y), width = point_size, height = point_size, color = point_color, fill = point_color)
     } #if detailed
-    p <- p + geom_polygon(data = dice_dot, aes(x, y), color = point_color, fill = point_color)
+    #p <- p + geom_polygon(data = dice_dot, aes(x, y), color = point_color, fill = point_color)
+    #p <- p + geom_path(data = dice_dot, aes(x, y), color = point_color, lineend = line_end)
   } #for
     
   # fix coordinates
@@ -156,9 +158,6 @@ plot_single_dice <- function(ggplot = NULL, result = 6, x = 0, y = 0, width = 0.
   
 } # plot_single_dice
 
-##############################################################################
-## plot_dice
-##############################################################################
 #' Plot result of roll_dice()
 #'
 #' @param data result of roll_dice()
@@ -179,7 +178,7 @@ plot_single_dice <- function(ggplot = NULL, result = 6, x = 0, y = 0, width = 0.
 #' roll_dice(times = 3, rounds = 3) %>% plot_dice(fill_success = "red")
 #' @export
 
-plot_dice <- function(data, detailed = FALSE, fill = "white", fill_success = fill, point_color = "black", line_color = "black", line_size = 0.8)  {
+plot_dice <- function(data, detailed = FALSE, fill = "white", fill_success = "gold", point_color = "black", line_color = "black", line_size = 0.8)  {
   
   # check data
   if (missing(data))  {
@@ -239,6 +238,9 @@ plot_dice <- function(data, detailed = FALSE, fill = "white", fill_success = fil
     
   } # for ii
   # plot all dice  
-  p
+  p + ggtitle(paste0(
+    "Success: ", sum(data$success), " of ", nrow(data),
+    " (", round(100 * sum(data$success) / nrow(data), 1), "%)"
+  ))
   
 } # plot_dice

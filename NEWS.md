@@ -1,6 +1,11 @@
-## tidydice 0.1.1 (2021-04-19)
-* add Suggests rmarkdown
-* fix https:// in DESCRIPTION
+## tidydice 1.0.0 (2022-02-01)
+
+* add roll_dice_formula()
+* fix help plot_binom()
+* change default color in plot_binom() to "coral"
+* Update Vignette
+* Update README
+* Default color for success in plot_dice() & plot_coin() is "gold"
 
 ## tidydice 0.0.6 (2020-01-07)
 

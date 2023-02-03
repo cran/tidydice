@@ -1,6 +1,3 @@
-##############################################################################
-## binom_dice
-##############################################################################
 #' Binomial distribution of rolling a dice.
 #'
 #' Generates a tibble containing the binomial distribution of rolling the dice
@@ -44,9 +41,6 @@ binom_dice <- function(times, sides = 6, success = 6) {
   
 } # binom_dice
 
-##############################################################################
-## binom_coin
-##############################################################################
 #' Binomial distribution of flipping a coin.
 #'
 #' Generates a tibble containing the binomial distribution of flipping a coin
@@ -66,9 +60,6 @@ binom_coin <- function(times, sides = 2, success = 2) {
   
 } # binom_coin 
 
-##############################################################################
-## binom
-##############################################################################
 #' Binomial distribution as table.
 #'
 #' Generates a tibble containing the binomial distribution using dbinom().
@@ -102,12 +93,9 @@ binom <- function(times, prob_success) {
   
 } # binom
 
-##############################################################################
-## plot_binom
-##############################################################################
 #' Plot a binomial distribution.
 #'
-#' Plot a binomial distribution generated with dice_binom() or coin_binom()
+#' Plot a binomial distribution generated with binom_dice() or binom_coin()
 #'
 #' @param data data containing values for binomial distribution
 #' @param title title of the plot
@@ -125,7 +113,7 @@ binom <- function(times, prob_success) {
 #' plot_binom(data = binom_dice(times = 10))
 #' @export
 
-plot_binom <- function(data , title = "Binomial distribution", color = "darkgrey", color_highlight = "red", label = NULL, label_size = 3, min_pct = 0.05, highlight = NULL)  {
+plot_binom <- function(data , title = "Binomial distribution", color = "darkgrey", color_highlight = "coral", label = NULL, label_size = 3, min_pct = 0.05, highlight = NULL)  {
   
   assertthat::assert_that("success" %in% names(data), msg = "success not found in data")
   assertthat::assert_that("pct" %in% names(data), msg = "pct not found in data")

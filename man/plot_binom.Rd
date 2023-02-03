@@ -8,7 +8,7 @@ plot_binom(
   data,
   title = "Binomial distribution",
   color = "darkgrey",
-  color_highlight = "red",
+  color_highlight = "coral",
   label = NULL,
   label_size = 3,
   min_pct = 0.05,
@@ -36,7 +36,7 @@ plot_binom(
 ggplot object
 }
 \description{
-Plot a binomial distribution generated with dice_binom() or coin_binom()
+Plot a binomial distribution generated with binom_dice() or binom_coin()
 }
 \examples{
 plot_binom(data = binom_dice(times = 10))

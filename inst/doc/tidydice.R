@@ -12,7 +12,7 @@ library(explore)
 ## ----fig.height=3, fig.width=6------------------------------------------------
 set.seed(123)
 roll_dice(times = 6, rounds = 3) %>% 
-  plot_dice(fill_success = "lightgrey")
+  plot_dice()
 
 ## ----echo=TRUE----------------------------------------------------------------
 set.seed(123)
@@ -144,6 +144,11 @@ flip_coin(times = 10, agg = TRUE)
 set.seed(123)
 flip_coin(times = 10, rounds = 4, agg = TRUE)
 
+## ----echo=TRUE, fig.height=4, fig.width=7-------------------------------------
+set.seed(123)
+flip_coin(times = 10, rounds = 4) %>%
+  plot_coin()
+
 ## ----echo=TRUE----------------------------------------------------------------
 set.seed(123)
 flip_coin(times = 10, agg = TRUE) %>% 
@@ -152,7 +157,7 @@ flip_coin(times = 10, agg = TRUE) %>%
 ## ----echo=TRUE----------------------------------------------------------------
 binom_coin(times = 10) 
 
-## ----echo=TRUE----------------------------------------------------------------
+## ----echo=TRUE, fig.height=4, fig.width=7-------------------------------------
 binom_coin(times = 10) %>% 
   plot_binom(title = "Binomial distribution,\n10 coin flips")
 
@@ -210,4 +215,38 @@ force_dice(rep(5, times = 3), round = 1) %>%
 set.seed(123)
 force_dice(rep(6, times = 3)) %>% 
   roll_dice(times = 3)
+
+## -----------------------------------------------------------------------------
+# roll 1 dice with 6 sides
+roll_dice_formula(dice_formula = "1d6", seed = 123)
+
+## -----------------------------------------------------------------------------
+roll_dice_formula(
+  dice_formula = "4d6", # 4 dice with 6 sides
+  success = 15:24,      # success is defined as sum between 15 and 24
+  seed = 123            # random seed to make it reproducible
+)
+
+## -----------------------------------------------------------------------------
+# roll 4 dice with 6 sides
+roll_dice_formula(
+  dice_formula = "4d6", # 4 dice with 6 sides
+  rounds = 10,          # repeat 10 times
+  success = 15:24,      # success is defined as sum between 15 and 24
+  seed = 123            # random seed to make it reproducible
+)
+
+## -----------------------------------------------------------------------------
+roll_dice_formula(
+  dice_formula = "4d6e3", # 4 dice with 6 sides, explode on a 3
+  rounds = 5,             # repeat 5 times
+  success = 15:24,        # success is defined as sum between 15 and 24
+  seed = 123              # random seed to make it reproducible
+)
+
+## ----fig.height=3, fig.width=6------------------------------------------------
+roll_dice_formula(
+  dice_formula = "4d6+1d10", # 4 dice with 6 sides + 1 dice with 10 sides
+  rounds = 1000) %>%         # repeat 1000 times
+  explore_bar(result, numeric = TRUE)  # visualise result
 
